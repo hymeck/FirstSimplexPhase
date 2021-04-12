@@ -5,18 +5,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="MainSimplexPhase.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\libs\MainSimplexPhase.Library.dll</HintPath>
-      </Reference>
-      <Reference Include="MathNet.Numerics, Version=4.15.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\libs\MathNet.Numerics.dll</HintPath>
-      </Reference>
-      <Reference Include="MathNet.Numerics.FSharp, Version=4.15.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\libs\MathNet.Numerics.FSharp.dll</HintPath>
-      </Reference>
-      <Reference Include="Matrix.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\libs\Matrix.Library.dll</HintPath>
-      </Reference>
+        <Reference Include="MathNet.Numerics.FSharp, Version=4.15.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\..\libs\MathNet.Numerics.FSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="MathNet.Numerics, Version=4.15.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\..\libs\MathNet.Numerics.dll</HintPath>
+        </Reference>
+        <Reference Include="MainSimplexPhase.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\..\libs\MainSimplexPhase.Library.dll</HintPath>
+        </Reference>
+        <Reference Include="Matrix.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\..\libs\Matrix.Library.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>
