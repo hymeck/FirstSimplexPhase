@@ -1,4 +1,5 @@
 ﻿using System;
+using FirstSimplexPhase.Library;
 
 namespace FirstSimplexPhase.Demo
 {
@@ -6,7 +7,15 @@ namespace FirstSimplexPhase.Demo
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var A = new double[,]
+            {
+                {1, 2 , 3},
+                {4, 5, 6}
+            };
+
+            var b = new double[] {-1, -2};
+
+            FirstSimplexPhaseService.Solve(A, b);
         }
     }
 }
