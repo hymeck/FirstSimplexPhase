@@ -47,7 +47,7 @@ namespace FirstSimplexPhase.Library
             Enumerable.Range(from, count).ToHashSet();
 
         // public static (Vector<double> X, ImmutableSortedSet<int> BasisIndices) Solve(Matrix<double> A, Vector<double> b)
-        public static void Solve(double[,] conditions, double[] constraints)
+        public static (Status status, FirstSimplexResult result) Solve(double[,] conditions, double[] constraints)
         {
             // ReSharper disable once InconsistentNaming
             var A = Matrix<double>.Build.DenseOfArray(conditions);
@@ -76,6 +76,18 @@ namespace FirstSimplexPhase.Library
                 initialSolution.ToArray(),
                 initialBasisIndices);
             var result = mainPhase.Maximize();
+
+            if (!result.HasSolutionChanged(initialSolution))
+                return (Status.Fail, FirstSimplexResult.Failure);
+
+            if (!result.IsCompatible()) // solution is incompatible
+                return (Status.Incompatible, FirstSimplexResult.Failure);
+
+            var basisIndices = new HashSet<int>(result.BasisIndices);
+            
+            // todo: mutate basis indices
+
+            return (Status.Success, FirstSimplexResult.Create(result.Solution, basisIndices));
         }
     }
 }
