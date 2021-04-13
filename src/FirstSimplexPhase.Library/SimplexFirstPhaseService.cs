@@ -44,6 +44,28 @@ namespace FirstSimplexPhase.Library
         private static ISet<int> CreateInitialBasisIndices(int from, int count) =>
             Enumerable.Range(from, count).ToHashSet();
 
+        private static (Matrix<double> initialConditions, double[] initialObjectiveFunction, Vector<double> initialSolution, ISet<int> initialBasisIndices) GetInitialValues(Matrix<double> conditions, Vector<double> constraints)
+        {
+            // build extended A matrix with E matrix
+            var initialConditions = AppendIdentity(conditions, CreateIdentityMatrix(conditions.RowCount));
+            Debug.WriteLine($"{nameof(initialConditions)}:\n{initialConditions.ToMatrixString()}\n");
+
+            // build c vector that consists of ColumnCount zeros and RowCount minus-ones
+            var initialObjectiveFunction = CreateInitialObjectiveFunction(conditions.ColumnCount, conditions.RowCount);
+            Debug.WriteLine(
+                $"{nameof(initialObjectiveFunction)}:\n{string.Join(", ", initialObjectiveFunction.AsEnumerable())}\n");
+
+            // build x vector by appending b vector to ColumnCount zeros
+            var initialSolution = CreateInitialSolutionVector(constraints, conditions.ColumnCount);
+            Debug.WriteLine($"{nameof(initialSolution)}:\n{initialSolution.ToVectorString()}\n");
+
+            // build J_b set that contains indices of last RowCount elements of initial sulution vector
+            var initialBasisIndices = CreateInitialBasisIndices(conditions.ColumnCount, conditions.RowCount);
+            Debug.WriteLine($"{nameof(initialBasisIndices)}:\n{string.Join(", ", initialBasisIndices)}\n");
+            
+            return (initialConditions, initialObjectiveFunction, initialSolution, initialBasisIndices);
+        }
+        
         public static (Status status, FirstSimplexResult result) Solve(double[,] conditions, double[] constraints)
         {
             var A = Matrix<double>.Build.DenseOfArray(conditions);
@@ -52,32 +74,19 @@ namespace FirstSimplexPhase.Library
             // if i-th b's element less than zero, multiply i-th A's row by -1
             MinusOne(ref A, b);
             
-            // build extended A matrix with E matrix
-            var initialConditions = AppendIdentity(A, CreateIdentityMatrix(A.RowCount));
-            Debug.WriteLine($"{nameof(initialConditions)}:\n{initialConditions.ToMatrixString()}\n");
-            
-            // build c vector that consists of ColumnCount zeros and RowCount minus-ones
-            var initialObjectiveFunction = CreateInitialObjectiveFunction(A.ColumnCount, A.RowCount);
-            Debug.WriteLine($"{nameof(initialObjectiveFunction)}:\n{string.Join(", ", initialObjectiveFunction.AsEnumerable())}\n");
+            var (initialConditions, initialObjectiveFunction, initialSolution, initialBasisIndices) = GetInitialValues(A, b);
 
-            // build x vector by appending b vector to ColumnCount zeros
-            var initialSolution = CreateInitialSolutionVector(b, A.ColumnCount);
-            Debug.WriteLine($"{nameof(initialSolution)}:\n{initialSolution.ToVectorString()}\n");
-            
-            // build J_b set that contains indices of last RowCount elements of initial sulution vector
-            var initialBasisIndices = CreateInitialBasisIndices(A.ColumnCount, A.RowCount);
-            Debug.WriteLine($"{nameof(initialBasisIndices)}:\n{string.Join(", ", initialBasisIndices)}\n");
-            
             var mainPhase = new SimplexMainPhaseService(
                 initialConditions.ToArray(),
                 initialObjectiveFunction.ToArray(),
                 initialSolution.ToArray(),
                 initialBasisIndices);
             var result = mainPhase.Maximize();
-            Debug.WriteLine($"solution:\n{string.Join(", ", result.Solution)}\n");
-            Debug.WriteLine($"indices:\n{string.Join(", ", result.BasisIndices)}\n");
+            
+            Debug.WriteLine($"{nameof(result.Solution)}:\n{string.Join(", ", result.Solution)}\n");
+            Debug.WriteLine($"{nameof(result.BasisIndices)}:\n{string.Join(", ", result.BasisIndices)}\n");
 
-            if (!result.HasSolutionChanged(initialSolution)) // lib-specific comparison to determine whether calculating has failed
+            if (!result.HasSolutionChanged(initialSolution)) // lib-specific comparison to determine whether calculation has failed
                 return (Status.Fail, FirstSimplexResult.Empty);
 
             if (!result.IsCompatible(A.RowCount))
@@ -89,5 +98,6 @@ namespace FirstSimplexPhase.Library
 
             return (Status.Success, FirstSimplexResult.Create(result.Solution, basisIndices));
         }
+        
     }
 }

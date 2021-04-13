@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MainSimplexPhase.Core;
-// ReSharper disable SimplifyLinqExpressionUseAll
 
 namespace FirstSimplexPhase.Library
 {
@@ -11,8 +10,8 @@ namespace FirstSimplexPhase.Library
             !simplexResult.Solution.SequenceEqual(previousSolution);
 
         public static bool IsCompatible(this SimplexResult simplexResult, int lastElementCount) => 
-            !simplexResult.Solution
+            simplexResult.Solution
                 .TakeLast(lastElementCount)
-                .Any(x => x == 0);
+                .All(x => x == 0);
     }
 }

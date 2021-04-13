@@ -5,7 +5,7 @@ using static System.Console;
 
 namespace FirstSimplexPhase.Demo
 {
-    public static class Utils
+    public static class Printer
     {
         public static void PrintFeasibleSolution(ImmutableArray<double> feasibleSolution) =>
             WriteLine($"[{string.Join("; ", feasibleSolution.AsEnumerable())}]");

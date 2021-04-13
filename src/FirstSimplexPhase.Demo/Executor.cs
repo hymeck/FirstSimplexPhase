@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using FirstSimplexPhase.Library;
-using static FirstSimplexPhase.Demo.Utils;
+using static FirstSimplexPhase.Demo.Printer;
 
 namespace FirstSimplexPhase.Demo
 {
@@ -14,7 +14,7 @@ namespace FirstSimplexPhase.Demo
             {
                 {
                     12, (new double[,] {{-1, 1, 1, 0}, {4, 5, 0, 1}, {10, 17, 2, 3}}, 
-                        new double[] {2, 8, 88})
+                        new double[] {2, 28, 88})
                 },
                 {
                     1, (new double[,] {{-1, 1, 1, 0}, {4, 5, 0, 1}, {10, 17, 2, 3}}, 
