@@ -1,5 +1,4 @@
-﻿using System;
-using FirstSimplexPhase.Library;
+﻿using static FirstSimplexPhase.Demo.Executor;
 
 namespace FirstSimplexPhase.Demo
 {
@@ -7,15 +6,10 @@ namespace FirstSimplexPhase.Demo
     {
         static void Main(string[] args)
         {
-            var A = new double[,]
-            {
-                {1, 2 , 3},
-                {4, 5, 6}
-            };
-
-            var b = new double[] {-1, -2};
-
-            FirstSimplexPhaseService.Solve(A, b);
+            var variant = args.Length == 0 || !int.TryParse(args[0], out var v) // no args provided or parse of first arg failed
+                ? 12 
+                : v;
+            PerformVariant(variant); // may be exception if variant is not supported
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MainSimplexPhase.Core;
+// ReSharper disable SimplifyLinqExpressionUseAll
 
 namespace FirstSimplexPhase.Library
 {
@@ -9,7 +10,9 @@ namespace FirstSimplexPhase.Library
         public static bool HasSolutionChanged(this SimplexResult simplexResult, IEnumerable<double> previousSolution) => 
             !simplexResult.Solution.SequenceEqual(previousSolution);
 
-        public static bool IsCompatible(this SimplexResult simplexResult) => 
-            !simplexResult.Solution.Any(x => x == 0);
+        public static bool IsCompatible(this SimplexResult simplexResult, int lastElementCount) => 
+            !simplexResult.Solution
+                .TakeLast(lastElementCount)
+                .Any(x => x == 0);
     }
 }

@@ -5,10 +5,10 @@ namespace FirstSimplexPhase.Library
 {
     public sealed class FirstSimplexResult
     {
-        public static readonly FirstSimplexResult Failure = new(ImmutableArray<double>.Empty, ImmutableSortedSet<int>.Empty);
+        public static readonly FirstSimplexResult Empty = new(ImmutableArray<double>.Empty, ImmutableSortedSet<int>.Empty);
 
-        public ImmutableArray<double> FeasibleSolution { get; init; }
-        public ImmutableSortedSet<int> BasisIndices { get; init; }
+        public ImmutableArray<double> FeasibleSolution { get; }
+        public ImmutableSortedSet<int> BasisIndices { get; }
 
         private FirstSimplexResult(ImmutableArray<double> feasibleSolution, ImmutableSortedSet<int> basisIndices)
         {
