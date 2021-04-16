@@ -17,8 +17,8 @@ namespace FirstSimplexPhase.Demo
                         new double[] {2, 28, 88})
                 },
                 {
-                    1, (new double[,] {{-1, 1, 1, 0}, {4, 5, 0, 1}, {10, 17, 2, 3}}, 
-                        new double[] {2, 8, 88})
+                    11, (new double[,] {{-1, 3, 1, 0}, {4, 3, 0, 1}, {5, 0, -1, 1}}, 
+                        new double[] {9, 24, 15})
                 },
                 
             };
