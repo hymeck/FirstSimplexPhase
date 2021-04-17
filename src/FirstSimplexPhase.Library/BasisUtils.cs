@@ -14,7 +14,7 @@ namespace FirstSimplexPhase.Library
         public static Matrix<double> GetBasisMatrix(Matrix<double> source, IEnumerable<int> basisIndices)
         {
             var columns = basisIndices.Select(source.Column);
-            return LinearAlgebraUtils.CreateMatrixFromVectors(columns);
+            return LinearAlgebraUtils.CreateMatrixFromColumns(columns);
         }
     }
 }

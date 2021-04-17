@@ -25,10 +25,10 @@ namespace FirstSimplexPhase.Library
                 .Select(initialConditions.Column)
                 .Select(inversedBasisMatrix.Multiply);
             
-            return CreateMatrixFromVectors(products);
+            return CreateMatrixFromRows(products);
         }
         
-        public static bool ReplaceBasisIndices(Matrix<double> products, int index, ref List<int> basisIndicesList, int basisItem, IList<int> freeVariables)
+        public static bool ReplaceBasisIndices(Matrix<double> products, int index, ref List<int> basisIndicesList, int basisElement, IList<int> freeVariables)
         {
             var hasChanged = true;
             for (var i = 0; i < products.RowCount; i++)
@@ -37,7 +37,7 @@ namespace FirstSimplexPhase.Library
                     continue;
                 
                 hasChanged = false;
-                basisIndicesList[basisIndicesList.IndexOf(basisItem)] = freeVariables[i];
+                basisIndicesList[basisIndicesList.IndexOf(basisElement)] = freeVariables[i];
             }
 
             return hasChanged;
@@ -46,33 +46,36 @@ namespace FirstSimplexPhase.Library
         public static void CorrectBasis(ref HashSet<int> basisIndices, int columnCount, int rowCount, Matrix<double> initialConditions)
         {
             var basisIndicesList = basisIndices.ToList();
+            var mutableBasisIndices = new List<int>(basisIndicesList); // because we can't mutate collection while iterating it
 
             var indices = Enumerable.Range(0, columnCount + rowCount).ToArray();
-            foreach (var (index, basisItem) in basisIndicesList.Select((basisItem, index) => (index, basisItem)))
+            foreach (var (index, basisElement) in basisIndicesList.Select((basisItem, index) => (index, basisItem)))
             {
-                if (basisItem <= columnCount)
+                if (basisElement <= columnCount)
                     continue;
-
-                var freeVariables = BasisUtils.GetNonBasisValues(indices, basisIndices, columnCount).ToList();
-                Debug.WriteLine($"{nameof(freeVariables)}\n{string.Join(", ", freeVariables)}\n");
 
                 var basisMatrix = BasisUtils.GetBasisMatrix(initialConditions, basisIndicesList);
                 Debug.WriteLine($"{nameof(basisMatrix)}\n{basisMatrix.ToMatrixString()}\n");
-
+                
                 var inversedBasisMatrix = basisMatrix.Inverse();
                 Debug.WriteLine($"{nameof(inversedBasisMatrix)}\n{inversedBasisMatrix.ToMatrixString()}\n");
+
+                var freeVariables = BasisUtils.GetNonBasisValues(indices, basisIndices, columnCount).ToList();
+                Debug.WriteLine($"{nameof(freeVariables)}\n{string.Join(", ", freeVariables)}\n");
                 
                 var products = GetProductMatrix(initialConditions, freeVariables, inversedBasisMatrix);
+                Debug.WriteLine($"{nameof(products)}\n{products.ToMatrixString()}\n");
 
-                var case2 = ReplaceBasisIndices(products, index, ref basisIndicesList, basisItem, freeVariables);
-                if (case2)
-                    basisIndicesList.Remove(basisItem);
+                var hasChanged = ReplaceBasisIndices(products, index, ref mutableBasisIndices, basisElement, freeVariables);
+                
+                if (hasChanged)
+                    mutableBasisIndices.Remove(basisElement);
             }
             
-            basisIndices.IntersectWith(basisIndicesList);
+            basisIndices.IntersectWith(mutableBasisIndices);
         }
         
-        public static ISet<int> GetCorrectedBasisIndices(SimplexResult result, int columnCount, int rowCount, Matrix<double> initialConditions)
+        public static IEnumerable<int> GetCorrectedBasisIndices(SimplexResult result, int columnCount, int rowCount, Matrix<double> initialConditions)
         {
             var basisIndices = new HashSet<int>(result.BasisIndices);
             CorrectBasis(ref basisIndices, columnCount, rowCount, initialConditions);

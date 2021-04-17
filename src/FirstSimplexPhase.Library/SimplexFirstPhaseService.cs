@@ -41,7 +41,7 @@ namespace FirstSimplexPhase.Library
             
             var correctedIndices = Core.GetCorrectedBasisIndices(result, A.ColumnCount, A.RowCount, initialConditions);
             
-            return (Status.Success, FirstSimplexResult.Create(result.Solution, correctedIndices));
+            return (Status.Success, FirstSimplexResult.Create(result.Solution.Take(A.ColumnCount), correctedIndices));
         }
     }
 }

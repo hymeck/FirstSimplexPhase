@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Collections.Generic;
 using FirstSimplexPhase.Library;
 using static System.Console;
 
@@ -7,11 +6,11 @@ namespace FirstSimplexPhase.Demo
 {
     public static class Printer
     {
-        public static void PrintFeasibleSolution(ImmutableArray<double> feasibleSolution) =>
-            WriteLine($"[{string.Join("; ", feasibleSolution.AsEnumerable())}]");
+        public static void PrintFeasibleSolution(IEnumerable<double> feasibleSolution) =>
+            WriteLine($"[{string.Join("; ", feasibleSolution)}]");
 
-        public static void PrintBasisIndices(ImmutableSortedSet<int> basisIndices) =>
-            WriteLine($"({string.Join(", ", basisIndices.AsEnumerable())})");
+        public static void PrintBasisIndices(IEnumerable<int> basisIndices) =>
+            WriteLine($"({string.Join(", ", basisIndices)})");
         
         public static void PrintResult((Status, FirstSimplexResult) output)
         {
